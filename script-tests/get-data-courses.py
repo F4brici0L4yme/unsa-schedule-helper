@@ -17,6 +17,27 @@ data_table = tables[1] # the [0] was just a selector
 #print(table2.prettify()[:1000])
 
 rows = data_table.find_all("tr")
-for row in rows[:15]:
-    print(row.get_text(separator= "|", strip= True))
+#for row in rows[:15]:
+#    print(row.get_text(separator= "|", strip= True))
+
+year = None
+semester = None
+
+import csv
+
+with open("courses_2017.csv", "w", newline="", encoding="utf-8") as f:
+    writer = csv.writer(f)
+
+    for r in rows:
+        cells = r.find_all("td")
+        text = r.get_text(strip = True)
+
+        if "A Ñ O" in text and len(cells) == 1:
+            year = text
+        elif "Semestre" in text:
+            semester = text
+        elif len(cells) >= 2:
+            code = cells[1].get_text(strip = True)
+            asignature = cells[2].get_text(strip = True)
+            writer.writerow([year, semester, code, asignature]) 
 
